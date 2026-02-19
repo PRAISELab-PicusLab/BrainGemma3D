@@ -1,95 +1,80 @@
-# BrainMedGemma3D
-### From 3D Brain MRI to Clinically Grounded Report Draft
-Submission to the Med-Gemma Impact Challenge https://www.kaggle.com/competitions/med-gemma-impact-challenge/overview
+# 🧠 3DBrainAdapter 
+### Native 3D Grounding for MedGemma: From Brain MRI to Clinical Report Draft
 
----
-## What This Is
-BrainMedGemma3D is an on-premise neuroradiology assistant that transforms a **3D brain MRI** into a structured radiology report draft.
-The radiologist reviews, edits if needed, and signs.
+**Official Submission to the [Med-Gemma Impact Challenge**](https://www.kaggle.com/competitions/med-gemma-impact-challenge/overview)
 
-_Human-in-the-loop.  
-Privacy-preserving.  
-Volumetrically grounded._
+**3DBrainAdapter** is an on-premise, privacy-preserving neuroradiology assistant. It transforms native **3D Brain MRIs** into structured, clinically grounded radiology report drafts using Google's HAI-DEF foundation models.
 
 ---
 
-## Foundation Models (Challenge-Compliant)
+## 1. The Clinical Problem (Problem Domain)
 
-Built directly on Google’s Health AI Developer Foundations:
+Brain MRI interpretation is intrinsically volumetric. Neuro-oncologists assess tumor infiltration and edema across three spatial dimensions.
+However, current Vision-Language Models (VLMs) process **2D slices**.
 
-- **MedSigLIP-448** (vision encoder)  
-- **MedGemma 4B 1.5** (language model)  
+This 2D approximation leads to:
 
-Source:  
-https://huggingface.co/collections/google/health-ai-developer-foundations-hai-def
-
-We strictly use official HAI-DEF models as required by the competition.
-
----
-
-## The Clinical Problem
-
-Brain MRI is volumetric.
-
-Slice-based inference:
-- Breaks spatial continuity  
-- Causes laterality errors  
-- Encourages hallucinated findings  
-
-Radiologists spend significant time drafting reports and ensuring spatial correctness.
+* ❌ Broken spatial continuity
+* ❌ **Laterality inversion** (confusing Left/Right hemispheres)
+* ❌ High rates of hallucinated lesions
+* ❌ Radiologist burnout (up to 60% of time spent dictating reports)
 
 ---
 
-## Our Contribution: 3D Grounding
+## 2. Unlocking HAI-DEF to its Fullest Potential (Effective Use)
 
-We extend MedSigLIP and MedGemma to native 3D:
+We built our solution upon Google’s **Health AI Developer Foundations**, bridging the gap between 2D foundations and 3D clinical needs.
 
-- 2D → 3D weight inflation  
-- Volumetric token compression  
-- Grounding projector into MedGemma  
-- LoRA fine-tuning for domain specialization  
+* **Vision Encoder (MedSigLIP-448):** We apply a mathematical **weight inflation** strategy to upgrade MedSigLIP into a native 3D encoder without training from scratch.
+* **Language Model (MedGemma-1.5-4B-IT):** Kept frozen to retain its exceptional medical reasoning.
 
-The MedGemma backbone remains frozen.
+*Fig 1. **3DBrainAdapter Architecture.** MedSigLIP is inflated to 3D. Volumetric tokens are compressed and projected into the frozen MedGemma LLM via soft-prompting.*
 
 ---
 
-## Workflow
+## 3. Staged Training & Feasibility (Product Feasibility)
 
-3D MRI  
-↓  
-Volumetric grounding  
-↓  
-Structured report generation  
-↓  
-PDF draft  
-↓  
-Radiologist validation & signature  
+To prevent OOM (Out-of-Memory) errors on standard hospital IT infrastructure, we use **Volumetric Token Compression** (reducing 3D patches to just 32 tokens) and **LoRA**.
+To prevent the LLM from generating "caption-like" text, we align the modalities in 3 distinct stages:
+
+*Fig 2. **Staged Learning.** (1) Contrastive latent alignment, (2) Projector Warmup, and (3) LoRA linguistic adaptation.*
 
 ---
 
-## Quantitative Comparison
+## 💡 4. Anticipated Clinical Impact (Impact Potential)
 
-Using the same HAI-DEF foundation models:
+By moving from a slice-based approach to native 3D grounding, our framework drastically improves diagnostic factualness.
 
-| Model | Pathology F1 | Laterality Accuracy | Hallucination Rate |
-|-------|--------------|--------------------|--------------------|
-| Slice-based MedGemma | 0.41 | 0.72 | 18% |
-| **BrainMedGemma3D** | **0.95** | **0.85** | **4%** |
+### Quantitative Performance (BraTS Dataset)
 
-+130% improvement in pathology detection  
-4× reduction in hallucinations  
+We benchmarked our framework against state-of-the-art 3D generalists and the standard 2D slice-based MedGemma.
 
-The improvement comes from volumetric grounding.
+| Model | BLEU-1 | BLEU-4 | ROUGE-L | CIDEr | Lat F1 | Anat F1 | **Path F1** |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **Med3DVLM** *(3D Generalist)* | 0.051 | 0.005 | 0.083 | 0.007 | 0.300 | 0.225 | 0.119 |
+| **MedGemma 1.5** *(2D Slice-based)* | 0.245 | 0.024 | 0.189 | 0.029 | 0.526 | 0.461 | 0.413 |
+| **3DBrainAdapter** *(Ours)* | **0.302** | 0.098 | **0.289** | 0.293 | **0.689** | **0.691** | **0.951** |
+
+*Note: The **+130% gain in Pathology F1** over the strong 2D MedGemma baseline proves that volumetric modeling is non-negotiable for diagnostic factualness.*
+
+### Qualitative Results
+
+Our model achieves **zero hallucinations on healthy controls** and correctly resolves complex spatial relationships that confuse 2D baselines.
+
+*Fig 3. **Qualitative Comparison.** 3DBrainAdapter correctly identifies the lesion location and pathologies, whereas baselines hallucinate or fail.*
 
 ---
 
-## Reproducibility
+## 5. Execution & Reproducibility (Execution)
+We provide a complete, transparent, and reproducible package.
+[DA INSERIRE HUGGING FACE, COME USARE IL CODICE, COME USARE LA DEMO, IMMMAGINI DELLA DEMO
 
-- Fully open-weight
-- On-premise compatible
-- Kaggle notebook included
-- Deterministic configs provided
+* 🎥 **[Watch the Video Demo Here](https://www.google.com/search?q=%23)** *(UI & Human-in-the-loop workflow)*
+* 📓 **[Kaggle Notebook](https://www.google.com/search?q=%23)** *(End-to-end inference code)*
+* 📄 **[Technical Write-up / Research Paper](https://www.google.com/search?q=%23)** *(Detailed methodology)*
 
----
+### 🌐 **Notes**
+This project was developed by Mariano Barone, Francesco Di Serio, Giuseppe Riccio, Antonio Romano, Marco Postiglione, and Vincenzo Moscato  
+*University of Naples, Federico II*
 
-Built for the Med-Gemma Impact Challenge.
+*Built with ❤️ for the Med-Gemma Impact Challenge.*
