@@ -30,6 +30,8 @@ We built our solution upon Google’s **Health AI Developer Foundations**, bridg
 
 *Fig 1. **3DBrainAdapter Architecture.** MedSigLIP is inflated to 3D. Volumetric tokens are compressed and projected into the frozen MedGemma LLM via soft-prompting.*
 
+<img width="6576" height="2112" alt="MedGemma3D-Arch" src="https://github.com/user-attachments/assets/37217da3-91a0-4678-83bf-7e80a263f8f3" />
+
 ---
 
 ## 3. Staged Training & Feasibility (Product Feasibility)
@@ -38,6 +40,8 @@ To prevent OOM (Out-of-Memory) errors on standard hospital IT infrastructure, we
 To prevent the LLM from generating "caption-like" text, we align the modalities in 3 distinct stages:
 
 *Fig 2. **Staged Learning.** (1) Contrastive latent alignment, (2) Projector Warmup, and (3) LoRA linguistic adaptation.*
+
+<img width="6220" height="1444" alt="MedGemma3D-Arch2" src="https://github.com/user-attachments/assets/0fd86e6b-2ec5-443e-8a88-c1f3460a8db8" />
 
 ---
 
@@ -62,6 +66,8 @@ We benchmarked our framework against state-of-the-art 3D generalists and the sta
 Our model achieves **zero hallucinations on healthy controls** and correctly resolves complex spatial relationships that confuse 2D baselines.
 
 *Fig 3. **Qualitative Comparison.** 3DBrainAdapter correctly identifies the lesion location and pathologies, whereas baselines hallucinate or fail.*
+
+<img width="1598" height="530" alt="Screenshot 2026-02-19 121304" src="https://github.com/user-attachments/assets/4b9301f8-6053-4e65-b898-613204b497bc" />
 
 ---
 
