@@ -6,7 +6,7 @@
 </div>
 
 <div align="center">
-    <h3>Native 3D Vision-Language Model for Automated Brain MRI Report Generation</h3>
+    <h3>Brain Report Automation via Inflated Vision Transformers in 3D</h3>
     <p><i>Bridging the gap between 2D medical foundation models and 3D neuroradiology</i></p>
 </div>
 
