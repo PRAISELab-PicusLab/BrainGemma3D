@@ -1,6 +1,10 @@
 # 🧠 BrainGemma3D
 
 <div align="center">
+    <a href="https://huggingface.co/praiselab-picuslab/BrainGemma3D" target="_blank"><img alt="BrainGemma3D"
+        src="https://img.shields.io/badge/HuggingFace-BrainGemma3D%20Model-grey?style=for-the-badge&logo=huggingface&logoSize=auto&color=gold"/></a>
+    <a href="https://www.kaggle.com/code/antonioromano45/braingemma3d" target="_blank"><img alt="Kaggle Notebook"
+        src="https://img.shields.io/badge/Kaggle-Notebook-20BEFF?style=for-the-badge&logo=kaggle&logoSize=auto"/></a>
     <a href="https://www.kaggle.com/competitions/med-gemma-impact-challenge/overview" target="_blank"><img alt="MedGemma Challenge"
         src="https://img.shields.io/badge/Kaggle-MedGemma_Impact_Challenge-blue?style=for-the-badge&logo=kaggle&logoSize=auto&color=20BEFF"/></a>
 </div>
@@ -168,7 +172,7 @@ BrainGemma3D/
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Training and Inference)
 
 ### 1. Installation
 
@@ -250,6 +254,95 @@ python interpretability.py \
     --input-volume path/to/brain_flair.nii.gz \
     --output-dir interpretability_output \
     --n-supervoxels 20
+```
+
+## 🚀 Quick start (Hugging Face)
+
+### Requirements
+
+```bash
+pip install torch torchvision transformers nibabel scikit-image lime
+```
+
+### Model Download
+
+```python
+from huggingface_hub import snapshot_download
+
+# 1. Download the repository containing our custom architecture from Hugging Face
+repo_id = "praiselab-picuslab/BrainGemma3D"
+print(f"Downloading repository: {repo_id}...")
+local_dir = snapshot_download(repo_id)
+print(f"✅ Repository downloaded to: {local_dir}")
+```
+
+### Usage
+
+```python
+import os
+import torch
+import sys
+sys.path.append(local_dir)
+
+from medgemma3d_architecture import MedGemma3D, load_nifti_volume, CANONICAL_PROMPT
+
+# Automatically select the optimal hardware accelerator (GPU if available, otherwise CPU)
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Hardware accelerator selected: {device}")
+
+# 2. Instantiate the base architecture (3D-inflated MedSigLIP + MedGemma)
+model = MedGemma3D(
+    vision_model_dir=f"{local_dir}/vision_model",
+    language_model_dir=f"{local_dir}/language_model",
+    depth=2,
+    num_vision_tokens=32,
+    freeze_vision=True,
+    freeze_language=True,
+    device_map={"": 0} if device == "cuda" else None,
+)
+
+# 3. Load projector
+proj_path = os.path.join(local_dir, "projector_vis_scale.pt")
+print(f"Loading custom projector weights from: {proj_path}...")
+
+# Load the checkpoint into memory
+ckpt = torch.load(proj_path, map_location=device)
+
+# Inject the weights into the visual projector (which bridges Vision and Language)
+model.vision_projector.load_state_dict(ckpt["vision_projector"])
+
+# Load the visual scaling factor, ensuring correct tensor formatting
+if ckpt.get("vis_scale") is not None:
+    if isinstance(ckpt["vis_scale"], torch.Tensor):
+        model.vis_scale.data = ckpt["vis_scale"].to(device)
+    else:
+        model.vis_scale.data.fill_(ckpt["vis_scale"])
+
+# Transition the model to evaluation mode for inference
+model.eval()
+print("✅ BrainGemma3D is fully loaded and ready for inference!")
+
+# 4. Load MRI scan
+volume = load_nifti_volume(
+    "path/to/brain_flair.nii.gz",
+    target_size=(32, 128, 128)
+).to(device)
+
+if volume.ndim == 4:
+    volume = volume.unsqueeze(0)
+
+# 5. Generate report
+with torch.no_grad():
+    report = model.generate_report(
+        volume,
+        prompt=CANONICAL_PROMPT,
+        max_new_tokens=256,
+        temperature=0.1,
+        top_p=0.9,
+    )
+
+print("\n===== GENERATED REPORT =====\n")
+print(report)
 ```
 
 ---
