@@ -3,6 +3,8 @@
 <div align="center">
     <a href="https://huggingface.co/praiselab-picuslab/BrainGemma3D" target="_blank"><img alt="BrainGemma3D"
         src="https://img.shields.io/badge/HuggingFace-BrainGemma3D%20Model-grey?style=for-the-badge&logo=huggingface&logoSize=auto&color=gold"/></a>
+    <a href="https://huggingface.co/spaces/giuseppericcio/BrainGemma3D" target="_blank"><img alt="BrainGemma3D"
+        src="https://img.shields.io/badge/HuggingFace-BrainGemma3D%20Demo-grey?style=for-the-badge&logo=huggingface&logoSize=auto&color=gold"/></a>
     <a href="https://www.kaggle.com/code/antonioromano45/braingemma3d" target="_blank"><img alt="Kaggle Notebook"
         src="https://img.shields.io/badge/Kaggle-Notebook-20BEFF?style=for-the-badge&logo=kaggle&logoSize=auto"/></a>
     <a href="https://www.kaggle.com/competitions/med-gemma-impact-challenge/overview" target="_blank"><img alt="MedGemma Challenge"
@@ -122,7 +124,7 @@ We use **3D LIME** (Local Interpretable Model-agnostic Explanations) to visualiz
     <p><i>Figure 3: LIME attribution maps for BraTS training sample 072. Red regions show supervoxels that positively contribute to pathology predictions. The model correctly focuses on tumor-affected areas in the left parietal and frontal lobes.</i></p>
 </div>
 
-### Example: BraTS Training Sample 072
+### Example: 
 
 **Ground Truth Report:**  
 The lesion area is in the **frontal and parietal regions of the left hemisphere** with mixed signal intensities of varying levels and speckled high-intensity signal areas. **Edema** is primarily concentrated in the peripheral regions of the left frontal and parietal lobes, indicating moderate to severe swelling of the tissues surrounding the lesions. **Necrosis** is observed in some lesion areas displaying low signal intensity interspersed within regions of high and isointense signals, showing a certain mottled appearance. **Ventricular compression** is mild deformation of the ventricles, suggesting pressure effects of the lesions on these regions.
