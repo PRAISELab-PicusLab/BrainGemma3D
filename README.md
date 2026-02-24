@@ -20,7 +20,7 @@
 
 **Official Submission to the [MedGemma Impact Challenge](https://www.kaggle.com/competitions/med-gemma-impact-challenge/overview)**
 
-**BrainGemma3D** is a staged vision-language framework that generates clinically accurate radiology reports directly from **native 3D brain MRI** volumes. Current medical vision-language models (VLMs) process volumetric scans using 2D slice-based approximations, fragmenting the spatial context critical for accurate neuroradiological interpretation. Our approach inflates a pretrained 2D medical encoder ([**MedSigLIP**](https://huggingface.co/google/medsiglip-base-patch16-448)) into a native 3D architecture and progressively aligns it with a causal language model ([**MedGemma-1.5-4B-IT**](https://huggingface.co/google/medgemma-1.5-4b-it)) through three training stages:
+**BrainGemma3D** is a staged vision-language framework that generates clinically accurate radiology reports directly from **native 3D brain MRI** volumes. Current medical vision-language models (VLMs) process volumetric scans using 2D slice-based approximations, fragmenting the spatial context critical for accurate neuroradiological interpretation. Our approach inflates a pretrained 2D medical encoder ([**MedSigLIP**](https://huggingface.co/google/medsiglip-448)) into a native 3D architecture and progressively aligns it with a causal language model ([**MedGemma-1.5-4B-IT**](https://huggingface.co/google/medgemma-1.5-4b-it)) through three training stages:
 
 1. **Contrastive Grounding**: Establishes visual-textual correspondence in a shared latent space
 2. **Projector Warmup**: Stabilizes multimodal conditioning with supervised learning
@@ -190,7 +190,7 @@ pip install -r requirements.txt
 ```bash
 # Download MedSigLIP and MedGemma from Hugging Face
 huggingface-cli login
-huggingface-cli download google/medsiglip-base-patch16-448 --local-dir Models/siglip
+huggingface-cli download google/medsiglip-448 --local-dir Models/siglip
 huggingface-cli download google/medgemma-1.5-4b-it --local-dir Models/medgemma
 ```
 
@@ -349,8 +349,8 @@ print(report)
 
 ## 📊 Dataset
 
-**BraTS 2021**: 369 brain tumor MRI cases with clinical annotations  
-**Healthy Controls**: 99 preprocessed healthy brain scans (skull-stripped, normalized)
+- **[BraTS 2020](https://www.kaggle.com/datasets/awsaf49/brats20-dataset-training-validation)**: 369 brain tumor MRI cases with clinical annotations from [TextBraTS 2021](https://github.com/Jupitern52/TextBraTS)
+- **Healthy Controls**: 99 preprocessed healthy brain scans (skull-stripped, normalized) from [MPI-Leipzig Mind-Brain-Body](https://openneuro.org/datasets/ds000221/versions/00002)
 
 ### Preprocessing
 
