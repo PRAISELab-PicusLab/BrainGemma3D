@@ -94,7 +94,7 @@ To prevent catastrophic forgetting and ensure clinical accuracy, we train the mo
 
 ## ⭐ Performance
 
-Evaluated on **468 subjects** (369 BraTS pathological cases + 99 healthy controls) with stratified group-based splits to prevent data leakage.
+Evaluated on 20% of 369 BraTS pathological cases + 99 healthy controls with stratified group-based splits to prevent data leakage.
 
 ### Quantitative Results
 
