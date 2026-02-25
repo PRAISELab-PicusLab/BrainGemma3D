@@ -283,7 +283,7 @@ print(f"✅ Repository downloaded to: {local_dir}")
 > **Note**  
 > If you want to use **BrainGemma3D** but you do not have a 3D NIfTI image available for testing, you can use the sample image that we provide in this repository.  
 >  
-> The example file (example_file.nii) is intended for quick validation and to help you verify that the pipeline is working correctly before using your own data.
+> The example file (example_brain.nii) is intended for quick validation and to help you verify that the pipeline is working correctly before using your own data.
 
 ```python
 import os
